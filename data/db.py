@@ -1,6 +1,13 @@
+import os
+
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncSession
 from sqlalchemy.orm import DeclarativeBase
 
+import redis.asyncio as aioredis
+
+REDIS_URL = "redis://127.0.0.1:6379/0"
+
+redis_client = aioredis.from_url(REDIS_URL, decode_responses=True)
 
 DATABASE_URL = "postgresql+asyncpg://user:1234@localhost:5432/cyberware_db"
 
