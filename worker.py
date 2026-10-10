@@ -4,6 +4,12 @@ from functools import wraps
 import json
 import math
 import redis.asyncio as aioredis
+from pynput.mouse import Controller
+
+mouse = Controller()
+
+def set_mouse_position(x, y):
+    mouse.position = (int(x), int(y))
 
 
 # 1. Асинхронный декоратор фильтрации шума телеметрии
@@ -56,7 +62,9 @@ async def process_command(coords: dict):
     # Эта логика выполнится ТОЛЬКО если движение превысило порог
     x = coords["x"]
     y = coords["y"]
-    print(f"🎯 Движение подтверждено! Координаты отправлены в пайплайн: X={x}, Y={y}")
+    if x is not None and y is not None:
+        await asyncio.to_thread(set_mouse_position, x, y)
+        print(f"🎯 Курсор перемещён в: X={x}, Y={y}")
 
 
 # 3. Чистая функция бесконечного прослушивания очереди Redis
